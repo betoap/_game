@@ -1,6 +1,6 @@
 import { State, Game } from 'phaser-ce';
+
 import { Player } from './player';
-import { Word } from './core/word';
 import { Loading } from './core/loading.state';
 
 export class Character extends State {

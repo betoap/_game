@@ -12,11 +12,13 @@ export class Boot extends State {
   }
 
   preload () {
-    this.loading.loadFile({
-      asset_key: 'settingsMap',
-      type: 'json',
-      source: this.level_file
-    });
+    this.loading.loadFile(
+      {
+        name: 'settingsMap',
+        type: 'json',
+        source: this.level_file
+      }
+    );
   }
 
   create () {

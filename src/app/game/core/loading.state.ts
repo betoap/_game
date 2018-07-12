@@ -1,5 +1,7 @@
 import { State } from 'phaser-ce';
 
+import { LoaderObject } from './utils';
+
 export class Loading extends State {
 
   private level_data: any;
@@ -23,38 +25,18 @@ export class Loading extends State {
   }
 
   parse( assets: Array<any> ): void {
-    assets.forEach( item => this.parseHandle(item) );
+    assets.forEach( item => this.loadFile( item ) );
   }
 
-  parseHandle( item: any ): void {
-    item['asset_key'] = item['name'];
-    if (
-      item.hasOwnProperty('image') &&
-      item.hasOwnProperty('tilewidth') &&
-      item.hasOwnProperty('tileheight')
-    ) {
-      item['type'] = 'spritesheet';
-      item['source'] = item['image'];
-      this.loadFile( item );
-    } else if (
-      item.hasOwnProperty('image') &&
-      item.hasOwnProperty('type') &&
-      item.type === 'imagelayer'
-    ) {
-      item['source'] = item['image'];
-      this.loadFile( item );
-    }
-    //console.log(this, item, item.hasOwnProperty('image'));
-  }
-
-  loadFile( asset: LoaderObject): void {
+  loadFile( asset ): void {
+    asset = new LoaderObject( asset );
     switch ( asset.type ) {
       case 'imagelayer':
       case 'image':
         this
           .load
           .image(
-            asset.asset_key,
+            asset.key,
             asset.source
           );
         break;
@@ -62,7 +44,7 @@ export class Loading extends State {
         this
           .load
           .spritesheet(
-            asset.asset_key,
+            asset.key,
             asset.source,
             asset.frame_width,
             asset.frame_height,
@@ -75,7 +57,7 @@ export class Loading extends State {
         this
           .load
           .tilemap(
-            asset.asset_key,
+            asset.key,
             asset.source,
             null,
             Phaser.Tilemap.TILED_JSON
@@ -85,7 +67,7 @@ export class Loading extends State {
         this
           .load
           .json(
-            asset.asset_key,
+            asset.key,
             asset.source,
             asset.overwrite
           );
@@ -94,7 +76,7 @@ export class Loading extends State {
         this
           .load
           .xml(
-            asset.asset_key,
+            asset.key,
             asset.source,
             asset.overwrite
           );
@@ -103,7 +85,7 @@ export class Loading extends State {
         this
           .load
           .text(
-            asset.asset_key,
+            asset.key,
             asset.source,
             asset.overwrite
           );
@@ -112,7 +94,7 @@ export class Loading extends State {
         this
           .load
           .audio(
-            asset.asset_key,
+            asset.key,
             asset.source,
             asset.auto_decode
           );
@@ -121,7 +103,7 @@ export class Loading extends State {
         this
           .load
           .video(
-            asset.asset_key,
+            asset.key,
             asset.source,
             asset.loadEvent,
             asset.asBlob
@@ -131,22 +113,7 @@ export class Loading extends State {
   }
 
   create(): void {
-    this.game.state.start('GameState', true, false, this.level_data);
+    this.game.state.start('RenderState', true, false, this.level_data);
   }
 
-}
-
-class LoaderObject {
-  asset_key: string;
-  type: string = 'image';
-  source: string;
-  frame_width?: number;
-  frame_height?: number;
-  frames?: number;
-  margin?: number;
-  spacing?: number;
-  auto_decode?: boolean = true;
-  overwrite?: boolean = true;
-  loadEvent?: string;
-  asBlob?: boolean;
 }
