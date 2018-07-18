@@ -1,3 +1,4 @@
+import { ScreenUtils, Orientation } from './core/screenutils';
 import { Game, AUTO, CANVAS  } from 'phaser-ce';
 import { Boot } from './core/boot.state';
 import { Loading } from './core/loading.state';
@@ -6,10 +7,11 @@ import { Render } from './core/render.state';
 export class Gamex  extends Game {
 
     constructor() {
+      const screenDims = ScreenUtils.calculateScreenMetrics(400, 380, Orientation.LANDSCAPE);
       super(
         {
-          width: '100%',
-          height: '100%',
+          width: screenDims.gameWidth,
+          height: screenDims.gameHeight,
           renderer: CANVAS ,
           antialias: true,
           multiTexture: true,

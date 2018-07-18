@@ -46,8 +46,8 @@ export class Loading extends State {
           .spritesheet(
             asset.key,
             asset.source,
-            asset.frame_width,
-            asset.frame_height,
+            asset.tilewidth,
+            asset.tileheight,
             asset.frames,
             asset.margin,
             asset.spacing

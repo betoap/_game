@@ -12,7 +12,7 @@ export class Character extends State {
   }
 
   preload() {
-
+    console.log( 'ok' );
     this.loading = new Loading( this );
     this.loading.loadFile({
       asset_key: 'simon',

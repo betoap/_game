@@ -1,27 +1,83 @@
+import { Tilemap } from 'phaser-ce';
+
 export interface ILayer {
-    data: Array<number>;
-    height: number;
-    name: string;
-    opacity: number;
-    type: string;
-    visible: boolean;
-    width: number;
-    x: number;
-    y: number;
+  alpha: Number;
+  bodies: Array<any>;
+  callbacks: Array<any>;
+  data: Array<number>;
+  height: number;
+  name: string;
+  opacity: number;
+  properties: any;
+  type: string;
+  visible: boolean;
+  width: number;
+  x: number;
+  y: number;
+  offsetx: number;
+  offsety: number;
+  objects: Array<Prefab>;
+}
+
+export class Prefab {
+
+  height: number;
+  id: number;
+  name: string;
+  properties: any;
+  rotation: number;
+  type: string;
+  visible: boolean;
+  width: number;
+  x: number;
+  y: number;
+  private map: Tilemap;
+
+  constructor( data, map?: Tilemap ) {
+    this.height = data.height;
+    this.id = data.id;
+    this.name = data.name;
+    this.properties = data.properties;
+    this.rotation = data.rotation;
+    this.type = data.type;
+    this.visible = data.visible;
+    this.width = data.width;
+    this.x = data.x;
+    this.y = data.y;
+    this.map = map;
+  }
+
+  getCenter(): number {
+    if ( this.map && this.map.hasOwnProperty('tileHeight') ) {
+      return this.map.tileHeight / 2;
+    }
+    return 0;
+  }
+
+  setX(): void {
+    this.x = this.x + this.getCenter();
+  }
+
+  setY(): void {
+    this.y = this.y - this.getCenter();
+  }
+
 }
 
 export interface ITileset {
-    columns: number;
-    firstgid: number;
-    image: string;
-    imageheight: number;
-    imagewidth: number;
-    margin: number;
-    name: string;
-    spacing: number;
-    tilecount: number;
-    tileheight: number;
-    tilewidth: number;
+    columns: Number;
+    drawCoords: Array<Number>;
+    firstgid: Number;
+    image: Number;
+    name: String;
+    properties: any;
+    rows: Number;
+    tileheight: Number;
+    tileMargin: Number;
+    tileproperties: any;
+    tileSpacing: Number;
+    tilewidth: Number;
+    total: Number;
 }
 
 export interface IWord {
@@ -73,15 +129,31 @@ export class Word implements IWord {
     }
 }
 
+export class Tile {
 
+  id: number;
+  height: number;
+  x: number;
+  y: number;
+  width: number;
+
+  constructor( tile ) {
+    this.id = tile.id;
+    this.height = tile.height;
+    this.x = tile.x;
+    this.y = tile.y;
+    this.width = tile.width;
+  }
+}
 export class LoaderObject {
   source?: string;
   name?: string;
   type?: string = 'image';
   key?: string;
-  frame_width?: number;
-  frame_height?: number;
+  imagewidth?: number;
+  imageheight?: number;
   frames?: number;
+  properties?: any;
   margin?: number;
   spacing?: number;
   auto_decode?: boolean = true;
@@ -89,13 +161,18 @@ export class LoaderObject {
   loadEvent?: string;
   asBlob?: boolean;
   image?: string;
+  tilewidth: number;
+  tileheight: number;
 
   constructor( item: LoaderObject ) {
     this.type = item.type;
     this.source = item.source;
-    this.frame_width = item.frame_width;
-    this.frame_height = item.frame_height;
+    this.imagewidth = item.imagewidth;
+    this.imageheight = item.imageheight;
+    this.tilewidth = item.tilewidth;
+    this.tileheight = item.tileheight;
     this.frames = item.frames;
+    this.properties = item.properties;
     this.margin = item.margin;
     this.spacing = item.spacing;
     this.auto_decode = item.auto_decode;
